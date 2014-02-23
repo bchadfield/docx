@@ -1,4 +1,4 @@
-require 'docx/html'
+require 'docx'
 require 'test/unit'
 
 class TestHtml < Test::Unit::TestCase
