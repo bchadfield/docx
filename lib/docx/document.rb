@@ -79,7 +79,7 @@ module Docx
         end
         html.body do |body|
           self.each_paragraph do |paragraph|
-            if paragraph.text_runs[0].heading?
+            if !paragraph.text_runs.empty? && paragraph.text_runs[0].heading?
               body.send("h#{paragraph.text_runs[0].heading[-1]}", paragraph.text_runs[0].text)
             else
               body.p paragraph.text_runs.map{ |tr| inline_content_for(tr) }.join('')
