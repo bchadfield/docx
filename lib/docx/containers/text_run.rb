@@ -10,7 +10,8 @@ module Docx
         DEFAULT_FORMATTING = {
           italic:    false,
           bold:      false,
-          underline: false
+          underline: false,
+          heading: false
         }
         
         def self.tag
@@ -47,7 +48,8 @@ module Docx
           {
             italic:    !@node.xpath('.//w:i').empty?,
             bold:      !@node.xpath('.//w:b').empty?,
-            underline: !@node.xpath('.//w:u').empty?
+            underline: !@node.xpath('.//w:u').empty?,
+            heading: !@node.xpath('..//w:pStyle/@w:val[starts-with(., "Heading")]').empty?
           }
         end
 
@@ -65,6 +67,14 @@ module Docx
         
         def underlined?
           @formatting[:underline]
+        end
+
+        def heading?
+          @formatting[:heading]
+        end
+
+        def heading
+          @node.xpath('..//w:pStyle').first["w:val"] if @formatting[:heading]
         end
       end
     end

@@ -166,13 +166,20 @@ describe Docx::Document do
     end
 
     it 'should have the correct text' do
-      @doc.paragraphs.size.should eq 6
+      @doc.paragraphs.size.should eq 13
       @doc.paragraphs[0].text.should eq 'Normal'
       @doc.paragraphs[1].text.should eq 'Italic'
       @doc.paragraphs[2].text.should eq 'Bold'
       @doc.paragraphs[3].text.should eq 'Underline'
       @doc.paragraphs[4].text.should eq 'Normal'
       @doc.paragraphs[5].text.should eq 'This is a sentence with all formatting options in the middle of the sentence.'
+      @doc.paragraphs[6].text.should eq 'Heading 1'
+      @doc.paragraphs[7].text.should eq 'Heading 2'
+      @doc.paragraphs[8].text.should eq 'Heading 3'
+      @doc.paragraphs[9].text.should eq 'Heading 4'
+      @doc.paragraphs[10].text.should eq 'Heading 5'
+      @doc.paragraphs[11].text.should eq 'Heading 6'
+      @doc.paragraphs[12].text.should eq 'A link'
     end
 
     it 'should contain a paragraph with multiple text runs' do
@@ -188,11 +195,30 @@ describe Docx::Document do
       end
     end
 
+    it 'should detect headings' do
+      (0..5).each do |i|
+        @doc.paragraphs[i].text_runs[0].heading?.should be_false
+      end
+      (6..11).each do |i|
+        @doc.paragraphs[i].text_runs[0].heading?.should be_true
+      end
+    end
+
+    it 'should read headings' do
+      @doc.paragraphs[6].text_runs[0].heading.should eq 'Heading1'
+      @doc.paragraphs[7].text_runs[0].heading.should eq 'Heading2'
+      @doc.paragraphs[8].text_runs[0].heading.should eq 'Heading3'
+      @doc.paragraphs[9].text_runs[0].heading.should eq 'Heading4'
+      @doc.paragraphs[10].text_runs[0].heading.should eq 'Heading5'
+      @doc.paragraphs[11].text_runs[0].heading.should eq 'Heading6'
+    end
+
     it 'should detect italic formatting' do
       @formatting[1][0].should eq @only_italic
       @doc.paragraphs[1].text_runs[0].italicized?.should be_true
       @doc.paragraphs[1].text_runs[0].bolded?.should be_false
       @doc.paragraphs[1].text_runs[0].underlined?.should be_false
+      @doc.paragraphs[1].text_runs[0].heading?.should be_false
     end
 
     it 'should detect bold formatting' do
@@ -200,6 +226,7 @@ describe Docx::Document do
       @doc.paragraphs[2].text_runs[0].italicized?.should be_false
       @doc.paragraphs[2].text_runs[0].bolded?.should be_true
       @doc.paragraphs[2].text_runs[0].underlined?.should be_false
+      @doc.paragraphs[2].text_runs[0].heading?.should be_false
     end
 
     it 'should detect underline formatting' do
@@ -207,6 +234,7 @@ describe Docx::Document do
       @doc.paragraphs[3].text_runs[0].italicized?.should be_false
       @doc.paragraphs[3].text_runs[0].bolded?.should be_false
       @doc.paragraphs[3].text_runs[0].underlined?.should be_true
+      @doc.paragraphs[3].text_runs[0].heading?.should be_false
     end
 
     it 'should detect mixed formatting' do
@@ -214,16 +242,19 @@ describe Docx::Document do
       @doc.paragraphs[5].text_runs[0].italicized?.should be_false
       @doc.paragraphs[5].text_runs[0].bolded?.should be_false
       @doc.paragraphs[5].text_runs[0].underlined?.should be_false
+      @doc.paragraphs[5].text_runs[0].heading?.should be_false
       
       @formatting[5][1].should eq @all_formatted
       @doc.paragraphs[5].text_runs[1].italicized?.should be_true
       @doc.paragraphs[5].text_runs[1].bolded?.should be_true
       @doc.paragraphs[5].text_runs[1].underlined?.should be_true
+      @doc.paragraphs[5].text_runs[1].heading?.should be_false
       
       @formatting[5][2].should eq @default_formatting
       @doc.paragraphs[5].text_runs[2].italicized?.should be_false
       @doc.paragraphs[5].text_runs[2].bolded?.should be_false
       @doc.paragraphs[5].text_runs[2].underlined?.should be_false
+      @doc.paragraphs[5].text_runs[2].heading?.should be_false
     end
   end
 
